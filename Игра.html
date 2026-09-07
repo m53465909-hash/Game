@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Для Веруни ❤️</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background: #0b1120;
+      color: #f8fafc;
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      height: 100vh;
+      height: 100dvh;
+      background: #111827;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      overflow: hidden;
+    }
+
+    /* Кнопка управления музыкой */
+    .music-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      z-index: 50;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .music-btn.playing {
+      border-color: #38bdf8;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      height: 100%;
+      padding: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* --- АКТ 1: ЧАТ --- */
+    .tg-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 12px;
+      padding-right: 46px;
+      border-bottom: 1px solid #1f2937;
+      flex-shrink: 0;
+      background: #111827;
+      z-index: 2;
+    }
+
+    .avatar-wrapper {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 2px solid #38bdf8;
+      background: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .chat-box {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      padding: 14px 10px;
+      margin: 8px 0;
+      border-radius: 16px;
+      background: linear-gradient(rgba(11, 17, 32, 0.7), rgba(11, 17, 32, 0.8)), 
+                  url('chat-bg.jpg') center/cover no-repeat;
+    }
+
+    .msg {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.4;
+      word-break: break-word;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .msg.in {
+      background: #1f2937;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg.out {
+      background: #2563eb;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg a {
+      color: #38bdf8;
+      text-decoration: underline;
+      font-weight: 500;
+      word-break: break-all;
+    }
+    .msg .time {
+      font-size: 10px;
+      color: #94a3b8;
+      float: right;
+      margin-left: 8px;
+      margin-top: 6px;
+    }
+
+    /* --- АКТ 2: ПОЛЕТ --- */
+    .flight-header {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      padding-top: 16px;
+    }
+
+    .flight-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .flight-subtitle {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .distance-card {
+      background: #1e293b;
+      border-radius: 20px;
+      padding: 18px 16px;
+      border: 1px solid #334155;
+      margin-bottom: 20px;
+    }
+
+    .counters-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .counter-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .counter-block.right {
+      align-items: flex-end;
+    }
+
+    .counter-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .counter-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+
+    .meeting-track-container {
+      position: relative;
+      height: 48px;
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .track-line {
+      width: 100%;
+      height: 4px;
+      background: #334155;
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .track-progress-left, .track-progress-right {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 0%;
+      background: #38bdf8;
+      border-radius: 2px;
+      transition: width 0.15s ease-out;
+    }
+
+    .track-progress-left { left: 0; }
+    .track-progress-right { right: 0; }
+
+    .plane {
+      position: absolute;
+      font-size: 22px;
+      top: 50%;
+      margin-top: -14px;
+      transition: all 0.15s ease-out;
+      z-index: 3;
+    }
+
+    .plane-left { left: 0%; transform: rotate(45deg); }
+    .plane-right { right: 0%; transform: scaleX(-1) rotate(45deg); }
+
+    .destination-point {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      z-index: 2;
+    }
+
+    .dest-icon { font-size: 18px; }
+
+    .dest-badge {
+      font-size: 11px;
+      font-weight: 700;
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 3px 8px;
+      border-radius: 12px;
+      color: #94a3b8;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+    }
+
+    .dest-badge.reached {
+      background: #2563eb;
+      border-color: #38bdf8;
+      color: #ffffff;
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+    }
+
+    .tap-zone {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .minimal-btn {
+      width: 90px;
+      height: 90px;
+      border-radius: 28px;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      cursor: pointer;
+      outline: none;
+      transition: transform 0.08s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .minimal-btn:active {
+      transform: scale(0.92);
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .tap-hint {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .flying-heart {
+      position: absolute;
+      pointer-events: none;
+      font-size: 20px;
+      animation: floatUp 0.8s ease-out forwards;
+      z-index: 10;
+    }
+@keyframes floatUp {
+      0% { opacity: 1; transform: translate(0, 0) scale(0.8); }
+      100% { opacity: 0; transform: translate(var(--tx), -80px) scale(1.2); }
+    }
+
+    /* --- АКТ 3: ПЛАНЫ И МЕНЮ --- */
+    .plans-header {
+      margin-top: 4px;
+      margin-bottom: 12px;
+      padding-top: 14px;
+      flex-shrink: 0;
+    }
+
+    .plans-title { font-size: 20px; font-weight: 700; color: #f8fafc; }
+    .plans-subtitle { font-size: 13px; color: #94a3b8; margin-top: 2px; }
+
+    .plans-scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #38bdf8;
+      margin-bottom: 6px;
+    }
+
+    .plans-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .plan-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .plan-card:active { transform: scale(0.98); }
+    .plan-card.selected { background: rgba(56, 189, 248, 0.12); border-color: #38bdf8; }
+
+    .plan-icon { font-size: 22px; flex-shrink: 0; }
+    .plan-info { flex: 1; }
+    .plan-name { font-size: 14px; font-weight: 600; color: #f8fafc; }
+    .plan-desc { font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.3; }
+
+    .plan-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #475569;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: transparent;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .plan-card.selected .plan-check {
+      background: #38bdf8;
+      border-color: #38bdf8;
+      color: #0f172a;
+    }
+
+    /* --- СЛАЙД 4: ИНТРО-ТЕКСТ --- */
+    .intro-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .intro-emoji {
+      font-size: 52px;
+      margin-bottom: 20px;
+      animation: gentleBounce 2s infinite ease-in-out;
+    }
+
+    @keyframes gentleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .intro-text {
+      font-size: 17px;
+      line-height: 1.6;
+      color: #e2e8f0;
+      font-weight: 500;
+      background: #1e293b;
+      padding: 22px 18px;
+      border-radius: 20px;
+      border: 1px solid #334155;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    /* --- СЛАЙД 5: ГЛАВНЫЙ ВОПРОС --- */
+    .proposal-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 10px 0;
+      position: relative;
+    }
+
+    .proposal-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 22px 18px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .proposal-text {
+      font-size: 15px;
+      line-height: 1.55;
+      color: #cbd5e1;
+      text-align: left;
+    }
+
+    .proposal-question {
+      margin-top: 14px;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.45;
+      color: #38bdf8;
+      text-align: left;
+    }
+
+    .proposal-buttons {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+    }
+
+    .btn-yes {
+      background: #ec4899;
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.4);
+      position: relative;
+      z-index: 5;
+    }
+
+    .btn-yes:active { background: #db2777; }
+.btn-no {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      position: relative;
+      transition: background 0.2s ease;
+    }
+
+    @keyframes shakeBtn {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .shake { animation: shakeBtn 0.3s ease-in-out; }
+
+    /* Предупреждение */
+    .warning-modal {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(11, 17, 32, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .warning-card {
+      background: #1e293b;
+      border: 2px solid #ef4444;
+      border-radius: 20px;
+      padding: 24px 18px;
+      text-align: center;
+      box-shadow: 0 15px 30px rgba(239, 68, 68, 0.3);
+      animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .warning-emoji { font-size: 44px; margin-bottom: 12px; }
+    .warning-text { font-size: 16px; line-height: 1.5; color: #f8fafc; font-weight: 600; margin-bottom: 20px; }
+
+    /* Экран успеха */
+    .success-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      z-index: 10;
+      padding: 20px 10px;
+    }
+
+    .success-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #38bdf8;
+      margin-bottom: 12px;
+    }
+
+    .success-desc {
+      font-size: 16px;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .btn-tg {
+      background: #229ED9;
+      color: #ffffff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(34, 158, 217, 0.4);
+    }
+
+    .confetti {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    /* Общие стили кнопок */
+    .btn-bottom {
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+
+    .btn {
+      width: 100%;
+      background: #38bdf8;
+      color: #0f172a;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.1s ease, opacity 0.2s ease, background 0.2s ease;
+    }
+
+    .btn:disabled {
+      background: #334155;
+      color: #64748b;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="mainContainer">
+
+  <!-- Аудио-трек -->
+  <audio id="bgMusic" src="music.mp3" loop preload="auto"></audio>
+  
+  <!-- Кнопка музыки -->
+  <div class="music-btn" id="musicToggleBtn" onclick="toggleMusic(event)" title="Музыка">
+    🎵
+  </div>
+
+  <!-- АКТ 1: ЧАТ -->
+  <div id="screen1" class="screen active">
+    <div class="tg-header">
+      <div class="avatar-wrapper">
+        <img class="avatar-img" src="avatar.jpg" alt="Владек" onerror="this.style.display='none'; this.parentElement.innerText='В'">
+      </div>
+      <div>
+        <div style="font-weight: 700;">Владек❤️</div>
+        <div style="font-size: 12px; color: #38bdf8;">в сети</div>
+      </div>
+    </div>
+
+    <div class="chat-box">
+      <div class="msg in">
+        Люблю тебя
+        <span class="time">02:14</span>
+      </div>
+
+      <div class="msg out">
+        Я тебя тоже
+        <span class="time">02:15</span>
+      </div>
+<div class="msg in">
+        <a href="https://vt.tiktok.com/ZSq84JGpU/" target="_blank" rel="noopener noreferrer">https://vt.tiktok.com/ZSq84JGpU/</a>
+        <span class="time">02:16</span>
+      </div>
+    </div>
+
+    <div class="btn-bottom">
+      <button class="btn" onclick="goToScreen(2)">Сократить расстояние ✈️</button>
+    </div>
+  </div>
+
+  <!-- АКТ 2: ПОЛЕТ В СТАМБУЛ -->
+  <div id="screen2" class="screen">
+    <div class="flight-header">
+      <div class="flight-title">Ждёмс встречу ✨</div>
+      <div class="flight-subtitle">Нажимай, чтобы приблизить момент</div>
+    </div>
+
+    <div class="distance-card">
+      <div class="counters-row">
+        <div class="counter-block">
+          <span class="counter-label">Владек</span>
+          <span id="distLeft" class="counter-value">1750 км</span>
+        </div>
+        <div class="counter-block right">
+          <span class="counter-label">Веруня</span>
+          <span id="distRight" class="counter-value">1735 км</span>
+        </div>
+      </div>
+      
+      <div class="meeting-track-container">
+        <div class="track-line">
+          <div id="progressLeft" class="track-progress-left"></div>
+          <div id="progressRight" class="track-progress-right"></div>
+        </div>
+
+        <div id="planeLeft" class="plane plane-left">✈️</div>
+
+        <div class="destination-point">
+          <div class="dest-icon">🕌</div>
+          <div id="destBadge" class="dest-badge">Точка встречи</div>
+        </div>
+
+        <div id="planeRight" class="plane plane-right">✈️</div>
+      </div>
+    </div>
+
+    <div class="tap-zone" id="tapZone">
+      <button class="minimal-btn" onclick="tapFlight(event)">✨</button>
+      <div class="tap-hint">Нажимай на искру</div>
+    </div>
+  </div>
+
+  <!-- АКТ 3: ПЛАНЫ И МЕНЮ -->
+  <div id="screen3" class="screen">
+    <div class="plans-header">
+      <div class="plans-title">Планы на Стамбул 🇹🇷</div>
+      <div class="plans-subtitle">Выбирай, что обязательно сделаем:</div>
+    </div>
+
+    <div class="plans-scroll-area">
+      <!-- Секция: Еда -->
+      <div>
+        <div class="section-label">Где покушаем? 🍽️</div>
+        <div class="plans-grid">
+          <div class="plan-card" onclick="togglePlan(this)">
+            <div class="plan-icon">🍔</div>
+            <div class="plan-info">
+              <div class="plan-name">Макдональдс</div>
+              <div class="plan-desc">Классический быстрый перекус, картошка фри и наггетсы</div>
+            </div>
+            <div class="plan-check">✓</div>
+          </div>
+
+          <div class="plan-card" onclick="togglePlan(this)">
+            <div class="plan-icon">🍝</div>
+            <div class="plan-info">
+              <div class="plan-name">Лазанья та чай</div>
+              <div class="plan-desc">Соковита гаряча лазанья в затишному ресторанчику</div>
+            </div>
+            <div class="plan-check">✓</div>
+          </div>
+
+          <div class="plan-card" onclick="togglePlan(this)">
+            <div class="plan-icon">🍏</div>
+            <div class="plan-info">
+              <div class="plan-name">Яблучний «Живчик»</div>
+              <div class="plan-desc">Той самий освіжаючий яблучний смак із бульбашками</div>
+            </div>
+            <div class="plan-check">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Секция: Локации и развлечения -->
+      <div>
+        <div class="section-label">Куда отправимся? ✨</div>
+        <div class="plans-grid">
+          <div class="plan-card" onclick="togglePlan(this)">
+            <div class="plan-icon">🌿</div>
+            <div class="plan-info">
+              <div class="plan-name">Заброшенный город и заросшие рельсы</div>
+              <div class="plan-desc">Атмосферный постапокалипсис, эстетика и долгие прогулки</div>
+            </div>
+            <div class="plan-check">✓</div>
+          </div>
+          <div class="plan-card" onclick="togglePlan(this)">
+            <div class="plan-icon">🌊</div>
+            <div class="plan-info">
+              <div class="plan-name">Пойти на пляж</div>
+              <div class="plan-desc">Морской бриз, шум волн и закат у воды</div>
+            </div>
+            <div class="plan-check">✓</div>
+          </div>
+
+          <div class="plan-card" onclick="togglePlan(this)">
+            <div class="plan-icon">🎤</div>
+            <div class="plan-info">
+              <div class="plan-name">Концерт Вани Дмитриенко</div>
+              <div class="plan-desc">Подпевать любимые треки вместе</div>
+            </div>
+            <div class="plan-check">✓</div>
+          </div>
+
+          <div class="plan-card" onclick="togglePlan(this)">
+            <div class="plan-icon">🤫</div>
+            <div class="plan-info">
+              <div class="plan-name">Тайный отель для двоих</div>
+              <div class="plan-desc">Уютный номер и время только для нас на всю ночь</div>
+            </div>
+            <div class="plan-check">✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-bottom">
+      <button id="btnPlans" class="btn" disabled onclick="goToScreen(4)">Утвердить идеальный план ❤️</button>
+    </div>
+  </div>
+
+  <!-- СЛАЙД 4: ТЕКСТ ПЕРЕД ВОПРОСОМ -->
+  <div id="screen4" class="screen">
+    <div class="intro-box">
+      <div class="intro-emoji">💌</div>
+      <div class="intro-text">
+        Моя любовь, ты прошла эту мини игрушку, как говорится: Hitler kaputt. Я же говорил, что сделаю что-то, когда буду признаваться.
+      </div>
+    </div>
+    <div class="btn-bottom">
+      <button class="btn" onclick="goToScreen(5)">Далее ➔</button>
+    </div>
+  </div>
+
+  <!-- СЛАЙД 5: ГЛАВНЫЙ ВОПРОС -->
+  <div id="screen5" class="screen">
+    <div id="proposalContent" class="proposal-box">
+      <div style="font-size: 40px; margin-bottom: 12px;">💖</div>
+      <div class="proposal-card">
+        <div class="proposal-text">
+          Моя дорогая Вероника, я тебя очень люблю и уже трудно представить мои будни без твоих сообщений. Каждое уведомление от тебя приносит очень много радости, поэтому хочу предложить тебе следующее:
+        </div>
+        <div class="proposal-question">
+          Давай начнём встречаться, как только сможем жить, если не вместе, то рядом?
+        </div>
+      </div>
+
+      <div class="proposal-buttons">
+        <button class="btn btn-yes" onclick="sayYes()">Да ❤️</button>
+        <button class="btn btn-no" id="btnNo" onclick="handleNoClick()">Нет 😢</button>
+      </div>
+    </div>
+
+    <!-- Модальное окно предупреждения -->
+    <div id="warningModal" class="warning-modal">
+      <div class="warning-card">
+        <div class="warning-emoji">😡🎙️</div>
+        <div class="warning-text">
+          Ты что? Совсем что ли? Если не нажмёшь на «Да», то буду кидать видосы с Жириновским!
+        </div>
+        <button class="btn btn-yes" onclick="closeWarningAndAccept()">Поняла, нажимаю «Да»! ❤️</button>
+      </div>
+    </div>
+
+    <!-- Экран победы с кнопкой в Telegram -->
+    <div id="successContent" class="success-screen">
+      <div style="font-size: 64px; margin-bottom: 16px;">🥰💍</div>
+      <div class="success-title">Урааа! ❤️</div>
+      <div class="success-desc">
+        Это самый лучший ответ! Теперь официально ждём нашу встречу и поездку в Стамбул ✨
+      </div>
+      <div style="width: 100%; margin-top: auto;">
+        <a href="https://t.me/Misterkerol?text=Я%20согласна!%20💍❤️" target="_blank" class="btn btn-tg">
+          Ответить в Telegram 💌
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Фоновая музыка
+  const bgMusic = document.getElementById('bgMusic');
+  const musicToggleBtn = document.getElementById('musicToggleBtn');
+  let musicStarted = false;
+function tryAutoPlayMusic() {
+    if (!musicStarted) {
+      bgMusic.play().then(() => {
+        musicStarted = true;
+        musicToggleBtn.classList.add('playing');
+      }).catch(() => {
+        // Автоплей заблокирован браузером до первого клика
+      });
+    }
+  }
+
+  document.addEventListener('click', tryAutoPlayMusic, { once: true });
+  document.addEventListener('touchstart', tryAutoPlayMusic, { once: true });
+
+  function toggleMusic(e) {
+    e.stopPropagation();
+    if (bgMusic.paused) {
+      bgMusic.play();
+      musicToggleBtn.classList.add('playing');
+      musicStarted = true;
+    } else {
+      bgMusic.pause();
+      musicToggleBtn.classList.remove('playing');
+    }
+  }
+
+  // Переключение экранов
+  function goToScreen(screenNum) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById('screen' + screenNum);
+    if (target) target.classList.add('active');
+  }
+
+  // Логика самолётов (Акт 2)
+  let flightProgress = 0;
+  const initialDistLeft = 1750;
+  const initialDistRight = 1735;
+  let isFlightFinished = false;
+
+  function tapFlight(e) {
+    if (isFlightFinished) return;
+    
+    if (navigator.vibrate) navigator.vibrate(35);
+
+    createTapHeart(e);
+    flightProgress += 7;
+    if (flightProgress > 100) flightProgress = 100;
+
+    const pLeft = document.getElementById('progressLeft');
+    const pRight = document.getElementById('progressRight');
+    const planeLeft = document.getElementById('planeLeft');
+    const planeRight = document.getElementById('planeRight');
+    const distLeft = document.getElementById('distLeft');
+    const distRight = document.getElementById('distRight');
+    const badge = document.getElementById('destBadge');
+
+    const halfProgress = flightProgress * 0.44; 
+    pLeft.style.width = halfProgress + '%';
+    pRight.style.width = halfProgress + '%';
+    planeLeft.style.left = halfProgress + '%';
+    planeRight.style.right = halfProgress + '%';
+
+    const curDistL = Math.max(0, Math.round(initialDistLeft * (1 - flightProgress / 100)));
+    const curDistR = Math.max(0, Math.round(initialDistRight * (1 - flightProgress / 100)));
+    distLeft.innerText = curDistL + ' км';
+    distRight.innerText = curDistR + ' км';
+
+    if (flightProgress >= 100) {
+      isFlightFinished = true;
+      badge.classList.add('reached');
+      badge.innerText = 'Встретились! ❤️';
+      if (navigator.vibrate) navigator.vibrate([60, 50, 60]);
+      setTimeout(() => goToScreen(3), 900);
+    }
+  }
+
+  function createTapHeart(e) {
+    const tapZone = document.getElementById('tapZone');
+    const heart = document.createElement('div');
+    heart.className = 'flying-heart';
+    heart.innerText = ['✨', '💖', '✈️', '🌸'][Math.floor(Math.random() * 4)];
+    
+    const rect = tapZone.getBoundingClientRect();
+    const x = (e.clientX || (rect.left + rect.width / 2)) - rect.left;
+    const y = (e.clientY || (rect.top + rect.height / 2)) - rect.top;
+
+    heart.style.left = x + 'px';
+    heart.style.top = y + 'px';
+    heart.style.setProperty('--tx', (Math.random() * 60 - 30) + 'px');
+
+    tapZone.appendChild(heart);
+    setTimeout(() => heart.remove(), 800);
+  }
+
+  // Выбор карточек (Акт 3)
+  function togglePlan(card) {
+    if (navigator.vibrate) navigator.vibrate(25);
+    card.classList.toggle('selected');
+    const selectedCount = document.querySelectorAll('.plan-card.selected').length;
+    document.getElementById('btnPlans').disabled = selectedCount === 0;
+  }
+
+  // Логика вопроса и кнопки "Нет" (Акт 5)
+  let noAttempts = 0;
+
+  function handleNoClick() {
+    noAttempts++;
+    if (navigator.vibrate) navigator.vibrate(60);
+
+    if (noAttempts >= 2) {
+      document.getElementById('warningModal').style.display = 'flex';
+    } else {
+      const btnNo = document.getElementById('btnNo');
+      btnNo.classList.remove('shake');
+      void btnNo.offsetWidth;
+      btnNo.classList.add('shake');
+    }
+  }
+function closeWarningAndAccept() {
+    document.getElementById('warningModal').style.display = 'none';
+    sayYes();
+  }
+
+  function sayYes() {
+    if (navigator.vibrate) navigator.vibrate([80, 50, 80, 50, 120]);
+    document.getElementById('proposalContent').style.display = 'none';
+    document.getElementById('warningModal').style.display = 'none';
+    const successScreen = document.getElementById('successContent');
+    successScreen.style.display = 'flex';
+    
+    createConfetti();
+  }
+
+  // Конфетти
+  function createConfetti() {
+    const container = document.getElementById('mainContainer');
+    const colors = ['#ec4899', '#38bdf8', '#facc15', '#a855f7', '#4ade80'];
+
+    for (let i = 0; i < 60; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      c.style.left = Math.random() * 100 + '%';
+      c.style.top = '-10px';
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      c.style.transform = `rotate({Math.random() * 360}deg)`;
+
+      container.appendChild(c);
+
+      const duration = 2000 + Math.random() * 2000;
+      const xEnd = (Math.random() - 0.5) * 160;
+
+      c.animate([
+        { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+        { transform: `translate({xEnd}px, 100vh) rotate({720}deg)`, opacity: 0 }
+      ], {
+        duration: duration,
+        easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+        fill: 'forwards'
+      });
+
+      setTimeout(() => c.remove(), duration);
+    }
+  }
+</script>
+</body>
+</html>
